@@ -1,0 +1,46 @@
+linters:
+  enable:
+    - errcheck
+    - gosimple
+    - govet
+    - ineffassign
+    - staticcheck
+    - unused
+    - gofmt
+    - goimports
+    - misspell
+    - unparam
+    - unconvert
+    - goconst
+    - gocyclo
+    - dupl
+    - gosec
+    - revive
+
+linters-settings:
+  gocyclo:
+    min-complexity: 15
+  goconst:
+    min-len: 3
+    min-occurrences: 3
+  misspell:
+    locale: US
+  govet:
+    check-shadowing: true
+  errcheck:
+    check-type-assertions: true
+  gosec:
+    excludes:
+      - G404 # Insecure random number source (rand)
+
+issues:
+  exclude-rules:
+    - path: _test\.go
+      linters:
+        - gosec
+        - dupl
+        - gocyclo
+
+run:
+  timeout: 5m
+  tests: true

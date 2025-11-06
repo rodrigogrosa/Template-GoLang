@@ -1,0 +1,49 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: template-golang
+  description: Production-ready Golang microservice template with hexagonal architecture
+  annotations:
+    github.com/project-slug: rodrigogrosa/Template-GoLang
+    backstage.io/techdocs-ref: dir:.
+  tags:
+    - golang
+    - microservice
+    - hexagonal-architecture
+    - rest-api
+    - template
+  links:
+    - url: http://localhost:8080/swagger/
+      title: API Documentation
+      icon: docs
+    - url: http://localhost:8080/health
+      title: Health Check
+      icon: dashboard
+    - url: http://localhost:8080/metrics
+      title: Metrics
+      icon: monitoring
+spec:
+  type: service
+  lifecycle: production
+  owner: team-platform
+  system: template-system
+  providesApis:
+    - template-api
+  dependsOn:
+    - resource:kafka-cluster
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: template-api
+  description: Template GoLang Microservice REST API
+  tags:
+    - rest
+    - openapi
+spec:
+  type: openapi
+  lifecycle: production
+  owner: team-platform
+  system: template-system
+  definition:
+    $text: ./docs/swagger.json
