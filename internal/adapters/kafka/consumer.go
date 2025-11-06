@@ -80,7 +80,7 @@ func (h *consumerGroupHandler) ConsumeClaim(session sarama.ConsumerGroupSession,
 
 func (h *consumerGroupHandler) handleMessage(msg *sarama.ConsumerMessage) {
 	eventType := string(msg.Key)
-	
+
 	logger.Logger.Debug().
 		Str("topic", msg.Topic).
 		Str("event_type", eventType).

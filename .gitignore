@@ -36,9 +36,5 @@ Thumbs.db
 /tmp/
 *.tmp
 
-# Swagger generated files (will be regenerated)
-docs/swagger.json
-docs/swagger.yaml
-
 # Dependencies
 vendor/

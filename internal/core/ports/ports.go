@@ -2,6 +2,7 @@ package ports
 
 import (
 	"context"
+
 	"github.com/rodrigogrosa/Template-GoLang/internal/core/domain"
 )
 

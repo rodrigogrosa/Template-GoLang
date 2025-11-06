@@ -35,15 +35,15 @@ func NewKafkaProducer(brokers []string, topic string) (ports.MessageProducer, er
 	}, nil
 }
 
-func (p *kafkaProducer) PublishItemCreated(ctx context.Context, item *domain.Item) error {
+func (p *kafkaProducer) PublishItemCreated(_ context.Context, item *domain.Item) error {
 	return p.publish("item.created", item)
 }
 
-func (p *kafkaProducer) PublishItemUpdated(ctx context.Context, item *domain.Item) error {
+func (p *kafkaProducer) PublishItemUpdated(_ context.Context, item *domain.Item) error {
 	return p.publish("item.updated", item)
 }
 
-func (p *kafkaProducer) PublishItemDeleted(ctx context.Context, itemID string) error {
+func (p *kafkaProducer) PublishItemDeleted(_ context.Context, itemID string) error {
 	return p.publish("item.deleted", map[string]string{"id": itemID})
 }
 

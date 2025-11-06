@@ -20,7 +20,7 @@ func NewInMemoryItemRepository() ports.ItemRepository {
 	}
 }
 
-func (r *inMemoryItemRepository) Create(ctx context.Context, item *domain.Item) error {
+func (r *inMemoryItemRepository) Create(_ context.Context, item *domain.Item) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
@@ -32,7 +32,7 @@ func (r *inMemoryItemRepository) Create(ctx context.Context, item *domain.Item) 
 	return nil
 }
 
-func (r *inMemoryItemRepository) GetByID(ctx context.Context, id string) (*domain.Item, error) {
+func (r *inMemoryItemRepository) GetByID(_ context.Context, id string) (*domain.Item, error) {
 	r.mu.RLock()
 	defer r.mu.RUnlock()
 
@@ -44,7 +44,7 @@ func (r *inMemoryItemRepository) GetByID(ctx context.Context, id string) (*domai
 	return item, nil
 }
 
-func (r *inMemoryItemRepository) List(ctx context.Context, limit, offset int) ([]*domain.Item, error) {
+func (r *inMemoryItemRepository) List(_ context.Context, limit, offset int) ([]*domain.Item, error) {
 	r.mu.RLock()
 	defer r.mu.RUnlock()
 
@@ -66,7 +66,7 @@ func (r *inMemoryItemRepository) List(ctx context.Context, limit, offset int) ([
 	return items, nil
 }
 
-func (r *inMemoryItemRepository) Update(ctx context.Context, item *domain.Item) error {
+func (r *inMemoryItemRepository) Update(_ context.Context, item *domain.Item) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
@@ -78,7 +78,7 @@ func (r *inMemoryItemRepository) Update(ctx context.Context, item *domain.Item) 
 	return nil
 }
 
-func (r *inMemoryItemRepository) Delete(ctx context.Context, id string) error {
+func (r *inMemoryItemRepository) Delete(_ context.Context, id string) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 

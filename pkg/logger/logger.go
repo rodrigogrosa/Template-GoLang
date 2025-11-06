@@ -12,7 +12,7 @@ var Logger zerolog.Logger
 // Init initializes the structured logger
 func Init(level string) {
 	// Set log level
-	logLevel := zerolog.InfoLevel
+	var logLevel zerolog.Level
 	switch level {
 	case "debug":
 		logLevel = zerolog.DebugLevel
