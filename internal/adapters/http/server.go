@@ -69,3 +69,8 @@ func (s *Server) StartTLS(certFile, keyFile string) error {
 func (s *Server) Shutdown(ctx context.Context) error {
 	return s.server.Shutdown(ctx)
 }
+
+// GetRouter returns the router for testing purposes
+func (s *Server) GetRouter() http.Handler {
+	return s.router
+}

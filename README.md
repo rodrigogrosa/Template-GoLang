@@ -60,7 +60,7 @@ A production-ready Golang microservice template with hexagonal architecture, com
 
 ## 🛠️ Prerequisites
 
-- Go 1.21 or later
+- Go 1.24 or later
 - Docker and Docker Compose (for containerized deployment)
 - Make (optional, for using Makefile commands)
 

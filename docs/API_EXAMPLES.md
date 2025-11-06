@@ -4,7 +4,7 @@ This document provides practical examples for using the microservice API.
 
 ## Prerequisites
 
-- Go 1.21+
+- Go 1.24+
 - Docker and Docker Compose (optional)
 - curl or similar HTTP client
 

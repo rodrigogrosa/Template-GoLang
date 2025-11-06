@@ -27,13 +27,14 @@ func setupTestServer(t *testing.T) *httptest.Server {
 	publisher := kafka.NewNoOpPublisher()
 	service := services.NewItemService(repo, publisher)
 	handler := httpAdapter.NewHandler(service, log)
-	
+
 	authConfig := middleware.AuthConfig{
 		Enabled: false,
 	}
-	
+
 	server := httpAdapter.NewServer("", handler, authConfig)
-	return httptest.NewServer(server.(*httpAdapter.Server))
+	// Use the router from the server which implements http.Handler
+	return httptest.NewServer(server.GetRouter())
 }
 
 func TestIntegration_CreateAndGetItem(t *testing.T) {

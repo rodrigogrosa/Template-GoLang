@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"fmt"
 	"testing"
 
 	"github.com/rodrigogrosa/Template-GoLang/internal/domain"
@@ -101,7 +102,7 @@ func TestInMemoryRepository_List(t *testing.T) {
 	// Create multiple items
 	for i := 0; i < 5; i++ {
 		item := &domain.Item{
-			ID:    string(rune(i)),
+			ID:    fmt.Sprintf("item-%d", i),
 			Name:  "Test Item",
 			Price: 10.50,
 		}
