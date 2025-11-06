@@ -9,13 +9,13 @@ import (
 
 // Config holds the application configuration
 type Config struct {
-	Server     ServerConfig
-	Database   DatabaseConfig
-	Kafka      KafkaConfig
-	Logging    LoggingConfig
-	Telemetry  TelemetryConfig
-	Auth       AuthConfig
-	TLS        TLSConfig
+	Server    ServerConfig
+	Database  DatabaseConfig
+	Kafka     KafkaConfig
+	Logging   LoggingConfig
+	Telemetry TelemetryConfig
+	Auth      AuthConfig
+	TLS       TLSConfig
 }
 
 // ServerConfig holds HTTP server configuration

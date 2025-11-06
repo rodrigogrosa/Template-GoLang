@@ -25,15 +25,15 @@ var (
 func Metrics(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		start := time.Now()
-		
+
 		// Wrap response writer to capture status code
 		wrapped := &responseWriter{ResponseWriter: w, statusCode: http.StatusOK}
-		
+
 		next.ServeHTTP(wrapped, r)
-		
+
 		duration := time.Since(start).Seconds()
 		status := http.StatusText(wrapped.statusCode)
-		
+
 		httpDuration.WithLabelValues(r.URL.Path, r.Method, status).Observe(duration)
 		httpCounter.WithLabelValues(r.URL.Path, r.Method, status).Inc()
 	})
@@ -53,10 +53,10 @@ func (rw *responseWriter) WriteHeader(code int) {
 func Logging(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		start := time.Now()
-		
+
 		wrapped := &responseWriter{ResponseWriter: w, statusCode: http.StatusOK}
 		next.ServeHTTP(wrapped, r)
-		
+
 		log.Info().
 			Str("method", r.Method).
 			Str("path", r.URL.Path).
@@ -77,12 +77,13 @@ func Recovery(next http.Handler) http.Handler {
 					Str("method", r.Method).
 					Str("path", r.URL.Path).
 					Msg("Panic recovered")
-				
+
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte(`{"error":"Internal server error"}`))
+				//nolint:errcheck // Best effort write on panic recovery
+				_, _ = w.Write([]byte(`{"error":"Internal server error"}`))
 			}
 		}()
-		
+
 		next.ServeHTTP(w, r)
 	})
 }
@@ -93,12 +94,12 @@ func CORS(next http.Handler) http.Handler {
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
-		
+
 		if r.Method == "OPTIONS" {
 			w.WriteHeader(http.StatusOK)
 			return
 		}
-		
+
 		next.ServeHTTP(w, r)
 	})
 }

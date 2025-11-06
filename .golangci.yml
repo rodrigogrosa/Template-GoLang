@@ -25,9 +25,18 @@ linters-settings:
   errcheck:
     check-type-assertions: true
     check-blank: true
+    exclude-functions:
+      - (*github.com/rodrigogrosa/Template-GoLang/pkg/validator.Validator).Min
+      - (*github.com/rodrigogrosa/Template-GoLang/pkg/validator.Validator).Max
+      - (*github.com/rodrigogrosa/Template-GoLang/pkg/validator.Validator).MinLength
+      - (*github.com/rodrigogrosa/Template-GoLang/pkg/validator.Validator).MaxLength
+      - (*github.com/rodrigogrosa/Template-GoLang/pkg/validator.Validator).Required
+      - (*github.com/rodrigogrosa/Template-GoLang/pkg/validator.Validator).Email
+      - (*github.com/rodrigogrosa/Template-GoLang/pkg/validator.Validator).Pattern
 
   govet:
-    check-shadowing: true
+    enable:
+      - shadow
 
   gofmt:
     simplify: true

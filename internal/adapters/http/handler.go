@@ -46,7 +46,7 @@ type UpdateItemRequest struct {
 
 // ErrorResponse represents an error response
 type ErrorResponse struct {
-	Error  string                    `json:"error"`
+	Error  string                      `json:"error"`
 	Errors []validator.ValidationError `json:"errors,omitempty"`
 }
 
@@ -66,8 +66,8 @@ func (h *Handler) CreateItem(w http.ResponseWriter, r *http.Request) {
 	v := validator.New()
 	v.Required("name", req.Name).
 		MinLength("name", req.Name, 1).
-		MaxLength("name", req.Name, 100).
-		Min("price", req.Price, 0)
+		MaxLength("name", req.Name, 100)
+	v.Min("price", req.Price, 0)
 
 	if !v.Valid() {
 		h.respondValidationError(w, v.Errors())
@@ -121,14 +121,18 @@ func (h *Handler) ListItems(w http.ResponseWriter, r *http.Request) {
 	defer span.End()
 
 	// Parse query parameters
-	limit, _ := strconv.Atoi(r.URL.Query().Get("limit"))
-	if limit <= 0 || limit > 100 {
-		limit = 10
+	limit := 10
+	if limitStr := r.URL.Query().Get("limit"); limitStr != "" {
+		if l, err := strconv.Atoi(limitStr); err == nil && l > 0 && l <= 100 {
+			limit = l
+		}
 	}
 
-	offset, _ := strconv.Atoi(r.URL.Query().Get("offset"))
-	if offset < 0 {
-		offset = 0
+	offset := 0
+	if offsetStr := r.URL.Query().Get("offset"); offsetStr != "" {
+		if o, err := strconv.Atoi(offsetStr); err == nil && o >= 0 {
+			offset = o
+		}
 	}
 
 	span.SetAttributes(
@@ -172,8 +176,8 @@ func (h *Handler) UpdateItem(w http.ResponseWriter, r *http.Request) {
 	v := validator.New()
 	v.Required("name", req.Name).
 		MinLength("name", req.Name, 1).
-		MaxLength("name", req.Name, 100).
-		Min("price", req.Price, 0)
+		MaxLength("name", req.Name, 100)
+	v.Min("price", req.Price, 0)
 
 	if !v.Valid() {
 		h.respondValidationError(w, v.Errors())
@@ -235,7 +239,8 @@ func (h *Handler) Health(w http.ResponseWriter, r *http.Request) {
 func (h *Handler) respondJSON(w http.ResponseWriter, status int, data interface{}) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
-	json.NewEncoder(w).Encode(data)
+	//nolint:errcheck // Best effort JSON encoding
+	_ = json.NewEncoder(w).Encode(data)
 }
 
 // respondError sends an error response

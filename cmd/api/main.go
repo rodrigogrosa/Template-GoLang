@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"go.opentelemetry.io/otel"
@@ -67,7 +68,11 @@ func main() {
 			publisher = kafka.NewNoOpPublisher()
 		} else {
 			publisher = pub
-			defer publisher.Close()
+			defer func() {
+				if err := publisher.Close(); err != nil {
+					log.Error("Failed to close publisher", err)
+				}
+			}()
 			log.Info("Kafka publisher initialized")
 		}
 	} else {
@@ -101,7 +106,16 @@ func main() {
 			mux := http.NewServeMux()
 			mux.Handle("/metrics", promhttp.Handler())
 			log.Info("Metrics server started", "address", metricsAddr)
-			if err := http.ListenAndServe(metricsAddr, mux); err != nil {
+
+			metricsServer := &http.Server{
+				Addr:              metricsAddr,
+				Handler:           mux,
+				ReadTimeout:       5 * time.Second,
+				WriteTimeout:      10 * time.Second,
+				ReadHeaderTimeout: 5 * time.Second,
+			}
+
+			if err := metricsServer.ListenAndServe(); err != nil {
 				log.Error("Metrics server failed", err)
 			}
 		}()
@@ -124,7 +138,11 @@ func main() {
 					log.Error("Consumer error", err)
 				}
 			}()
-			defer consumer.Close()
+			defer func() {
+				if err := consumer.Close(); err != nil {
+					log.Error("Failed to close consumer", err)
+				}
+			}()
 			log.Info("Kafka consumer started")
 		}
 	}

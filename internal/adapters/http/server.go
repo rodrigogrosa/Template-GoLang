@@ -3,10 +3,11 @@ package http
 import (
 	"context"
 	"net/http"
+	"time"
 
 	"github.com/gorilla/mux"
-	httpSwagger "github.com/swaggo/http-swagger"
 	"github.com/rodrigogrosa/Template-GoLang/pkg/middleware"
+	httpSwagger "github.com/swaggo/http-swagger"
 )
 
 // Server represents the HTTP server
@@ -34,7 +35,7 @@ func NewServer(addr string, handler *Handler, authConfig middleware.AuthConfig) 
 	// API routes with optional JWT auth
 	api := router.PathPrefix("/v1").Subrouter()
 	api.Use(middleware.JWTAuth(authConfig))
-	
+
 	api.HandleFunc("/items", handler.CreateItem).Methods("POST")
 	api.HandleFunc("/items", handler.ListItems).Methods("GET")
 	api.HandleFunc("/items/{id}", handler.GetItem).Methods("GET")
@@ -43,8 +44,12 @@ func NewServer(addr string, handler *Handler, authConfig middleware.AuthConfig) 
 
 	return &Server{
 		server: &http.Server{
-			Addr:    addr,
-			Handler: router,
+			Addr:              addr,
+			Handler:           router,
+			ReadTimeout:       15 * time.Second,
+			WriteTimeout:      15 * time.Second,
+			ReadHeaderTimeout: 10 * time.Second,
+			IdleTimeout:       60 * time.Second,
 		},
 		router: router,
 	}
