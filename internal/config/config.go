@@ -3,6 +3,7 @@ package config
 import (
 	"os"
 	"strconv"
+	"strings"
 )
 
 // Config holds application configuration
@@ -111,7 +112,18 @@ func getEnvAsBool(key string, defaultValue bool) bool {
 
 func getEnvAsSlice(key string, defaultValue []string) []string {
 	if value := os.Getenv(key); value != "" {
-		return []string{value}
+		// Parse comma-separated values
+		parts := strings.Split(value, ",")
+		result := make([]string, 0, len(parts))
+		for _, part := range parts {
+			trimmed := strings.TrimSpace(part)
+			if trimmed != "" {
+				result = append(result, trimmed)
+			}
+		}
+		if len(result) > 0 {
+			return result
+		}
 	}
 	return defaultValue
 }

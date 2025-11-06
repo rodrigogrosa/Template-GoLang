@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/rodrigogrosa/Template-GoLang/pkg/logger"
@@ -66,7 +67,14 @@ func MetricsMiddleware(next http.Handler) http.Handler {
 // CORSMiddleware adds CORS headers
 func CORSMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Access-Control-Allow-Origin", "*")
+		// TODO: Configure allowed origins via environment variable
+		// For production, set specific origins instead of "*"
+		origin := os.Getenv("CORS_ALLOWED_ORIGINS")
+		if origin == "" {
+			origin = "*" // Development default
+		}
+
+		w.Header().Set("Access-Control-Allow-Origin", origin)
 		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
 

@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"fmt"
 	"testing"
 
 	"github.com/rodrigogrosa/Template-GoLang/internal/core/domain"
@@ -75,7 +76,7 @@ func TestInMemoryItemRepository_List(t *testing.T) {
 	// Create test items
 	for i := 0; i < 5; i++ {
 		item := &domain.Item{
-			ID:          string(rune(i + 1)),
+			ID:          fmt.Sprintf("item-%d", i+1),
 			Name:        "Test Item",
 			Description: "Test Description",
 		}

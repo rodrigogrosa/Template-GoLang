@@ -16,6 +16,9 @@ import (
 var tracer trace.Tracer
 
 // Init initializes OpenTelemetry tracer
+// Note: The Jaeger exporter is deprecated. For new projects, consider using
+// the OTLP exporter (otlptracehttp or otlptracegrpc) which is the recommended
+// approach. This implementation uses Jaeger for simplicity and wide compatibility.
 func Init(serviceName, jaegerEndpoint string) (func(context.Context) error, error) {
 	if jaegerEndpoint == "" {
 		// Return no-op if tracing is not configured

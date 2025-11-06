@@ -43,8 +43,11 @@ func (s *itemService) CreateItem(ctx context.Context, item *domain.Item) error {
 
 	// Publish event (non-blocking, best effort)
 	if s.producer != nil {
+		// Create a context with timeout for the async operation
 		go func() {
-			_ = s.producer.PublishItemCreated(context.Background(), item)
+			publishCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+			defer cancel()
+			_ = s.producer.PublishItemCreated(publishCtx, item)
 		}()
 	}
 
@@ -90,7 +93,9 @@ func (s *itemService) UpdateItem(ctx context.Context, item *domain.Item) error {
 	// Publish event
 	if s.producer != nil {
 		go func() {
-			_ = s.producer.PublishItemUpdated(context.Background(), item)
+			publishCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+			defer cancel()
+			_ = s.producer.PublishItemUpdated(publishCtx, item)
 		}()
 	}
 
@@ -109,7 +114,9 @@ func (s *itemService) DeleteItem(ctx context.Context, id string) error {
 	// Publish event
 	if s.producer != nil {
 		go func() {
-			_ = s.producer.PublishItemDeleted(context.Background(), id)
+			publishCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+			defer cancel()
+			_ = s.producer.PublishItemDeleted(publishCtx, id)
 		}()
 	}
 
